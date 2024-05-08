@@ -1,0 +1,77 @@
+replicaCount: 3
+
+image:
+  repository: 696960135893.dkr.ecr.eu-west-1.amazonaws.com/test-new
+  tag: 'latest'
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 8080
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ''
+
+resources:
+  limits:
+    cpu: '500'
+  requests:
+    cpu: '250m'
+
+tolerations:
+  - key: dedicated
+    value: apps
+    operator: Equal
+    effect: NoSchedule
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 60
+
+alb:
+  enabled: true
+  host: "shujaahmedi2l/test-new"
+
+ingress:
+  enabled: false
+  className: 'nginx'
+  annotations:
+    cert-manager.io/issuer: 'letsencrypt-prod'
+
+  hosts:
+    - host: "test-new.onexidp.com"
+      paths:
+        - path: '/'
+          pathType: Prefix
+
+  tls:
+    - hosts:
+        - "test-new.onexidp.com"
+      secretName: 'tls-secret'
+
+letsencrypt:
+  enabled: true
+  email: 'aram@ideatolife.me'
+db:
+  enabled: true
+livenessProbe:
+  httpGet:
+    path: /
+    port: 8080
+  initialDelaySeconds: 15
+  periodSeconds: 10
+  failureThreshold: 3
+  timeoutSeconds: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 8080
+  initialDelaySeconds: 15
+  periodSeconds: 10
+  failureThreshold: 3
+  timeoutSeconds: 3

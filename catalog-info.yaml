@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "test-new"
+  description: "nothing"
+  annotations:
+    github.com/project-slug: "shujaahmedi2l/test-new"
+    argocd/app-name: "test-new"
+  links:
+    - url: https://test-new.onexidp.com
+      title: Web Application
+      icon: LaunchIcon
+spec:
+  type: service
+  owner: guests
+  lifecycle: experimental
